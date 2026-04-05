@@ -1,75 +1,54 @@
-# DreamIT Edu Hub
+# DreamIT AI Hub
 
-**IT 교육 학습사이트 허브** - 교양, 인공지능, 경영, 컴퓨터, 코딩, 자격증, 진로컨설팅 분야 30여 개 학습 플랫폼을 소개하고, 학습사이트 분양 및 커리어 서비스를 제공하는 교육 포털 사이트입니다.
+**AI 전문 학습사이트 허브** - ChatGPT, Claude, Gemini 등 11개 AI 학습 플랫폼을 소개하고, AI 사이트 분양(라이선싱) 및 맞춤 제작 서비스를 제공하는 AI 교육 포털 사이트입니다.
 
-- **도메인**: https://edu-hub.dreamitbiz.com
+- **도메인**: https://ai-hub.dreamitbiz.com
 - **운영**: DreamIT Biz (https://www.dreamitbiz.com)
 
 ---
 
-## 학습 카테고리 (7개)
+## AI 학습 사이트 (11개)
 
-### 1. 교양분야 (Liberal Arts) — 5개
-| 사이트 | 설명 | URL | 난이도 |
-|--------|------|-----|--------|
-| 컴퓨팅 사고 | 문제 해결을 위한 컴퓨팅 사고력 | https://koreatech.dreamitbiz.com | 입문 |
-| 통계학 기초 | 데이터 분석의 기초 통계학 | 준비중 | 입문 |
-| 실용 영어 | 비즈니스 영어 회화와 작문 | 준비중 | 입문 |
-| 글쓰기와 소통 | 논리적 글쓰기와 커뮤니케이션 | 준비중 | 입문 |
-| 프레젠테이션 | 발표 기법과 시각 자료 제작 | 준비중 | 입문 |
+### 1. AI 챗봇 마스터 (AI Chatbot Master) — 4개
+| 사이트 | 설명 | URL |
+|--------|------|-----|
+| ChatGPT 활용 | OpenAI ChatGPT 활용 실전 가이드 | https://chatgpt.dreamitbiz.com |
+| Claude AI 활용 | Anthropic Claude AI 마스터 | https://claude.dreamitbiz.com |
+| Gemini AI 활용 | Google Gemini AI 완벽 활용 | https://gemini.dreamitbiz.com |
+| GenSpark AI | GenSpark AI 에이전트 플랫폼 활용 | https://genspark.dreamitbiz.com |
 
-### 2. 인공지능활용 (AI Utilization) — 5개
-| 사이트 | 설명 | 난이도 |
-|--------|------|--------|
-| 프롬프트 엔지니어링 | ChatGPT, Claude 프롬프트 작성 기법 | 입문 |
-| LLM & 랭체인 | 대규모 언어 모델과 LangChain AI 앱 구축 | 고급 |
-| 업무자동화 | AI 활용 문서 작성·데이터 처리 자동화 | 중급 |
-| AI 데이터 분석 | AI 기반 데이터 분석과 인사이트 도출 | 중급 |
-| AI 이미지 생성 | Midjourney, DALL-E, Stable Diffusion 활용 | 입문 |
+### 2. AI 실무 자동화 (AI Work Automation) — 2개
+| 사이트 | 설명 | URL |
+|--------|------|-----|
+| AI 업무 자동화 | AI 기반 업무 프로세스 자동화 | https://autowork.dreamitbiz.com |
+| AI 에이전트 | AI 에이전트 개발과 활용 | https://ai-agents.dreamitbiz.com |
 
-### 3. 경영전공분야 (Business) — 7개
-| 사이트 | URL | 난이도 |
-|--------|-----|--------|
-| 회계학 원리 | 준비중 | 중급 |
-| 경영전략론 | 준비중 | 고급 |
-| 재무관리 | 준비중 | 고급 |
-| 마케팅개론 | https://marketing.dreamitbiz.com | 입문 |
-| 셀프 브랜딩 마케팅 | https://self-branding.dreamitbiz.com | 입문 |
-| 고객경험디자인 | https://uxdesign.dreamitbiz.com | 중급 |
-| 디지털비즈니스전략세미나 | https://digitalbiz.dreamitbiz.com | 고급 |
+### 3. AI 데이터 & 미디어 (AI Data & Media) — 2개
+| 사이트 | 설명 | URL |
+|--------|------|-----|
+| AI 데이터 분석 | AI 기반 데이터 분석과 인사이트 도출 | https://ai-data.dreamitbiz.com |
+| AI 미디어 생성 | AI 이미지·영상·음악 생성 마스터 | https://ai-media.dreamitbiz.com |
 
-### 4. 컴퓨터전공분야 (Computer Science) — 5개
-| 사이트 | URL | 난이도 |
-|--------|-----|--------|
-| DB 학습 | https://db-study.dreamitbiz.com | 중급 |
-| 알고리즘 | https://algorithm.dreamitbiz.com | 중급 |
-| 자료구조 | https://db-study.dreamitbiz.com | 중급 |
-| 정보통신 | 준비중 | 중급 |
-| 소프트웨어설계 & 구현 | 준비중 | 고급 |
+### 4. AI 개발 심화 (AI Advanced Dev) — 2개
+| 사이트 | 설명 | URL |
+|--------|------|-----|
+| 프롬프트 엔지니어링 | 고급 프롬프트 설계와 최적화 기법 | https://ai-prompt.dreamitbiz.com |
+| AI 파인튜닝 | LLM 파인튜닝과 맞춤 AI 모델 개발 | https://fine-tuning.dreamitbiz.com |
 
-### 5. 코딩학습 (Coding) — 4개
-| 사이트 | URL | 난이도 |
-|--------|-----|--------|
-| HTML 학습 | https://html.dreamitbiz.com | 입문 |
-| Web 학습 | https://webstudy.dreamitbiz.com | 고급 |
-| React 학습 | https://reactstudy.dreamitbiz.com | 중급 |
-| 코딩 학습 | https://coding.dreamitbiz.com | 입문 |
+### 5. 오픈소스 AI (Open Source AI) — 1개
+| 사이트 | 설명 | URL |
+|--------|------|-----|
+| 오픈소스 AI | 오픈소스 AI 모델 활용과 로컬 배포 | https://openclaw.dreamitbiz.com |
 
-### 6. 자격증학습분야 (Certification) — 5개
-| 사이트 | 설명 | 난이도 |
-|--------|------|--------|
-| 정보처리기사 | 정보처리기사 이론 및 실기 | 중급 |
-| 컴퓨터활용능력 | 컴활 1·2급 필기/실기 | 입문 |
-| SQLD | SQL 개발자 자격증 | 중급 |
-| 리눅스마스터 | 리눅스마스터 1·2급 | 중급 |
-| 경영정보시각화 | 경영 데이터 시각화 자격증 | 중급 |
+---
 
-### 7. 진로컨설팅 (Career Consulting) — 3개
-| 서비스 | 설명 | 가격 |
-|--------|------|------|
-| 맞춤 커리어 사이트 제작 | 포트폴리오 웹사이트 맞춤 제작 | 50,000원~ |
-| 1:1 커리어 코칭 | 전문 컨설턴트와 진로 상담 | 가격 문의 |
-| 이력서 & 자기소개서 코칭 | 이력서·자소서 첨삭 코칭 | 가격 문의 |
+## 분양(라이선싱) 시스템
+
+| 유형 | 설명 | 가격 |
+|------|------|------|
+| 개별 분양 (single-site) | AI 사이트 1개 라이선스 | 50만원/사이트 |
+| 전체 패키지 (bundle) | 11개 사이트 번들 | 300만원 (45% 할인) |
+| 맞춤 제작 (custom) | 새 AI 사이트 기획~제작 | 가격 문의 |
 
 ---
 
@@ -79,13 +58,24 @@
 |------|------|
 | 다국어 지원 | 한국어 / English 전환 |
 | 다크모드 | Light / Dark / Auto 모드 |
-| 컬러 테마 | Blue, Red, Green, Purple, Orange 5가지 |
-| 장바구니 & 결제 | 상품(도서/강좌) 장바구니 담기, 결제 흐름 |
-| 스토어 (/shop) | 상품 목록, 카테고리 필터, 검색 |
+| 컬러 테마 | Blue(기본), Red, Green, Purple, Orange 5가지 |
+| 장바구니 & 결제 | 분양 상품 장바구니 담기, PortOne 카드 결제 |
+| 분양 스토어 (/shop) | 개별/번들/맞춤 분양 상품 목록 |
+| 분양 문의 (/franchise) | 분양 신청 및 문의 폼 |
 | 관리자 대시보드 | 주문/회원/상품 관리 + 통계 |
-| 로그인 게이트 | 회원가입 후에만 학습사이트 외부 링크 접근 가능 |
-| 학습사이트 분양 | 강사·교수 맞춤 커스터마이징 후 사이트 제작·분양 |
-| 회원 시스템 | Google/Kakao OAuth + 이메일 로그인 |
+| 회원 시스템 | Google/Kakao OAuth 로그인 |
+| 커뮤니티 | 공지사항, Q&A, 블로그, 게시판, 갤러리 |
+
+---
+
+## 브랜딩
+
+| 항목 | 값 |
+|------|-----|
+| 이름 | DreamIT AI Hub / 드림아이티 AI 허브 |
+| 기본 테마색 | #1E3A8A (다크 블루) |
+| 그라디언트 | #1E3A8A → #7C3AED (블루 → 퍼플) |
+| 로고 | `AI` + ` Hub` |
 
 ---
 
@@ -93,68 +83,82 @@
 
 | 분류 | 기술 |
 |------|------|
-| Frontend | React 19, Vite 7, React Router 7 |
+| Frontend | React 19, Vite 7, TypeScript 6, React Router 7 |
 | Backend | Supabase (Auth + Database + Storage) |
+| 결제 | PortOne (아임포트) 카드 결제 |
 | Icons | Font Awesome 6 Free |
 | Fonts | Noto Sans KR (Google Fonts) |
-| 배포 | GitHub Pages + GitHub Actions |
+| 배포 | GitHub Pages (`npx gh-pages -d dist`) |
+
+---
+
+## Supabase 테이블 (접두사: `ah_`)
+
+| 테이블 | 용도 |
+|--------|------|
+| `ah_products` | 분양 상품 |
+| `ah_orders` | 주문 |
+| `ah_order_items` | 주문 상세 |
+| `ah_notices` | 공지사항 |
+| `ah_qna_posts` | Q&A 질문 |
+| `ah_comments` | 댓글 |
+| `ah_blog_posts` | 블로그 |
+| `ah_board_posts` | 게시판 |
+| `ah_gallery_items` | 갤러리 |
+| `ah_franchise_applications` | 분양 신청 |
+| `user_profiles` | 회원 프로필 (공유) |
 
 ---
 
 ## 프로젝트 구조
 
 ```
-src/
-├── components/          # 공통 컴포넌트
-│   ├── AdminGuard.jsx   # 관리자 라우트 보호
-│   ├── AuthGuard.jsx    # 인증 라우트 보호
-│   ├── SEOHead.jsx      # SEO 메타태그
-│   ├── SearchModal.jsx  # 검색 모달
-│   └── layout/          # Navbar, Footer
-├── config/
-│   ├── site.js          # 사이트 설정 (카테고리, 메뉴, 학습사이트)
-│   └── admin.js         # 관리자 이메일 목록
-├── contexts/            # React Context
-│   ├── AuthContext.jsx  # 인증 상태
-│   ├── CartContext.jsx  # 장바구니
-│   ├── LanguageContext.jsx
-│   ├── ThemeContext.jsx
-│   └── ToastContext.jsx
-├── hooks/               # 커스텀 훅
-├── layouts/
-│   ├── PublicLayout.jsx # 공개 페이지 레이아웃
-│   └── AdminLayout.jsx  # 관리자 레이아웃
-├── pages/
-│   ├── Home.jsx         # 메인 페이지
-│   ├── Courses.jsx      # 학습사이트 목록/상세
-│   ├── Shop.jsx         # 스토어 (상품 목록)
-│   ├── Cart.jsx         # 장바구니
-│   ├── Checkout.jsx     # 결제
-│   ├── Franchise.jsx    # 학습사이트 분양 신청
-│   ├── About.jsx        # 소개
-│   ├── Login.jsx        # 로그인
-│   ├── Register.jsx     # 회원가입
-│   └── admin/           # 관리자 페이지
-│       ├── Dashboard.jsx
-│       ├── Orders.jsx
-│       ├── Members.jsx
-│       ├── Products.jsx
-│       └── ProductForm.jsx
-├── styles/
-│   ├── base.css         # CSS 변수, 버튼, 유틸리티
-│   ├── site.css         # 페이지별 컴포넌트 스타일
-│   ├── hero.css         # 히어로 섹션
-│   ├── navbar.css       # 네비게이션 + 글래스모피즘
-│   ├── shop.css         # 스토어/장바구니/결제
-│   ├── admin.css        # 관리자 대시보드
-│   ├── auth.css         # 로그인/회원가입
-│   └── dark-mode.css    # 다크모드 오버라이드
-└── utils/
-    ├── supabase.js      # Supabase 클라이언트
-    ├── auth.js          # 인증 유틸리티
-    ├── productStorage.js # 상품 CRUD
-    ├── adminApi.js      # 관리자 API
-    └── translations.js  # 다국어 번역 (ko/en)
+ai-hub/
+├── public/
+│   ├── CNAME              # ai-hub.dreamitbiz.com
+│   ├── og-image.png       # OG 공유 이미지 (1200x630)
+│   ├── sitemap.xml        # SEO 사이트맵
+│   └── robots.txt         # 크롤러 설정
+├── scripts/
+│   ├── create-tables.sql  # Supabase 테이블 생성 스크립트
+│   └── generate-og-image.js # OG 이미지 생성 스크립트
+├── src/
+│   ├── config/
+│   │   ├── site.js        # ★ 핵심: 11개 AI 사이트, 5개 카테고리, 메뉴
+│   │   └── admin.js       # 관리자 이메일 설정
+│   ├── contexts/
+│   │   ├── CartContext.tsx     # 장바구니 (키: dreamitbiz_aihub_cart)
+│   │   ├── ThemeContext.tsx    # 테마 (기본: blue = 다크블루)
+│   │   ├── AuthContext.tsx     # 인증 (Google/Kakao OAuth)
+│   │   ├── LanguageContext.tsx # 다국어 (ko/en)
+│   │   └── ToastContext.tsx    # 토스트 알림
+│   ├── pages/
+│   │   ├── Home.tsx       # 5개 AI 카테고리, 통계(11사이트/5분야)
+│   │   ├── Shop.tsx       # 분양 스토어 (single-site/bundle/custom)
+│   │   ├── Franchise.tsx  # 분양 문의 폼
+│   │   ├── Checkout.tsx   # 결제 (주문번호: AIH-YYMMDD-XXXXX)
+│   │   ├── About.tsx      # AI Hub 소개
+│   │   └── admin/         # 관리자 페이지
+│   ├── layouts/
+│   │   └── AdminLayout.tsx # DreamIT AI Hub 사이드바
+│   ├── utils/
+│   │   ├── supabase.js        # ah_orders, ah_order_items
+│   │   ├── productStorage.js  # ah_products
+│   │   ├── noticeStorage.js   # ah_notices
+│   │   ├── qnaStorage.js      # ah_qna_posts
+│   │   ├── commentStorage.js  # ah_comments
+│   │   ├── searchStorage.js   # ah_blog_posts, ah_board_posts, ah_gallery_items
+│   │   ├── adminApi.js        # ah_orders, ah_order_items, ah_products
+│   │   ├── translations.js   # ★ 핵심: AI Hub 전용 ko/en 번역
+│   │   └── portone.js        # PortOne 결제 연동
+│   └── styles/
+│       ├── base.css       # 다크블루 테마 + 5가지 컬러 테마
+│       └── shop.css       # 분양 상품 스타일
+├── Dev_md/                # 개발 문서
+├── .env                   # Supabase 키, 사이트 URL
+├── package.json           # dreamit-ai-hub
+├── vite.config.js         # port: 5176
+└── index.html             # AI Hub 메타태그 + OG 태그
 ```
 
 ---
@@ -169,19 +173,24 @@ npm install
 cp .env.example .env
 # .env 파일에 Supabase URL과 Anon Key를 입력하세요
 
-# 개발 서버 시작
+# 개발 서버 시작 (http://localhost:5176)
 npm run dev
 ```
 
 ## 빌드 & 배포
 
 ```bash
-npm run build    # 프로덕션 빌드
-npm run preview  # 빌드 미리보기
+# 프로덕션 빌드
+npm run build
+
+# 빌드 미리보기
+npm run preview
+
+# GitHub Pages 배포
+npx gh-pages -d dist
 ```
 
-GitHub `main` 브랜치 push 시 GitHub Actions로 자동 배포됩니다.
-
+---
 
 ## License / 라이선스
 
@@ -212,4 +221,3 @@ For licensing inquiries, contact: aebon@dreamitbiz.com
 **Designed & Developed by Ph.D Aebon Lee**
 
 DreamIT Biz | https://www.dreamitbiz.com
-
