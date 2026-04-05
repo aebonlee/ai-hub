@@ -1,0 +1,110 @@
+/**
+ * adminApi.js — 관리자 전용 API 유틸리티
+ */
+import getSupabase from './supabase';
+
+/** 대시보드 통계 조회 */
+export async function getDashboardStats() {
+  const client = getSupabase();
+  if (!client) return { orders: 0, revenue: 0, members: 0, products: 0 };
+
+  const [ordersRes, membersRes, productsRes] = await Promise.all([
+    client.from('ah_orders').select('id, total_amount, status'),
+    client.from('user_profiles').select('id', { count: 'exact', head: true }),
+    client.from('ah_products').select('id', { count: 'exact', head: true }).eq('is_active', true),
+  ]);
+
+  const orders = ordersRes.data || [];
+  const revenue = orders
+    .filter((o) => o.status === 'paid')
+    .reduce((sum, o) => sum + (o.total_amount || 0), 0);
+
+  return {
+    orders: orders.length,
+    revenue,
+    members: membersRes.count || 0,
+    products: productsRes.count || 0,
+  };
+}
+
+/** 전체 주문 조회 (페이지네이션 + 상태 필터) */
+export async function getAllOrders({ page = 1, limit = 20, status = null } = {}) {
+  const client = getSupabase();
+  if (!client) return { data: [], total: 0 };
+
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = client
+    .from('ah_orders')
+    .select('*, ah_order_items(*)', { count: 'exact' })
+    .order('created_at', { ascending: false })
+    .range(from, to);
+
+  if (status) query = query.eq('status', status);
+
+  const { data, count, error } = await query;
+  if (error) {
+    console.error('getAllOrders error:', error);
+    return { data: [], total: 0 };
+  }
+  return { data: data || [], total: count || 0 };
+}
+
+/** 주문 상태 변경 */
+export async function updateOrderStatus(orderId, status) {
+  const client = getSupabase();
+  if (!client) return null;
+  const { data, error } = await client
+    .from('ah_orders')
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq('id', orderId)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+/** 전체 회원 조회 (페이지네이션 + 검색) */
+export async function getAllMembers({ page = 1, limit = 20, search = '' } = {}) {
+  const client = getSupabase();
+  if (!client) return { data: [], total: 0 };
+
+  const from = (page - 1) * limit;
+  const to = from + limit - 1;
+
+  let query = client
+    .from('user_profiles')
+    .select('*', { count: 'exact' })
+    .order('created_at', { ascending: false })
+    .range(from, to);
+
+  if (search) {
+    query = query.or(`display_name.ilike.%${search}%,email.ilike.%${search}%`);
+  }
+
+  const { data, count, error } = await query;
+  if (error) {
+    console.error('getAllMembers error:', error);
+    return { data: [], total: 0 };
+  }
+  return { data: data || [], total: count || 0 };
+}
+
+/** 회원 상태 변경 */
+export async function updateMemberStatus(userId, status, reason = '') {
+  const client = getSupabase();
+  if (!client) return null;
+  const { data, error } = await client
+    .from('user_profiles')
+    .update({
+      account_status: status,
+      status_reason: reason,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', userId)
+    .select()
+    .single();
+  if (error) throw error;
+  return data;
+}
