@@ -3,13 +3,17 @@
  */
 import getSupabase from './supabase';
 
+const REDIRECT_URL = typeof window !== 'undefined'
+  ? `${window.location.origin}/`
+  : 'https://ai-hub.dreamitbiz.com/';
+
 /** Google OAuth 로그인 */
 export async function signInWithGoogle() {
   const client = getSupabase();
   if (!client) throw new Error('Supabase not configured');
   const { data, error } = await client.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.origin + window.location.pathname }
+    options: { redirectTo: REDIRECT_URL }
   });
   if (error) throw error;
   return data;
@@ -22,7 +26,7 @@ export async function signInWithKakao() {
   const { data, error } = await client.auth.signInWithOAuth({
     provider: 'kakao',
     options: {
-      redirectTo: window.location.origin + window.location.pathname,
+      redirectTo: REDIRECT_URL,
       scopes: 'profile_nickname profile_image account_email',
     }
   });
@@ -47,6 +51,7 @@ export async function signUp(email, password, displayName) {
     email,
     password,
     options: {
+      emailRedirectTo: REDIRECT_URL,
       data: {
         full_name: displayName,
         signup_domain: window.location.hostname,
@@ -86,7 +91,7 @@ export async function resetPassword(email) {
   const client = getSupabase();
   if (!client) throw new Error('Supabase not configured');
   const { data, error } = await client.auth.resetPasswordForEmail(email, {
-    redirectTo: window.location.origin + window.location.pathname
+    redirectTo: REDIRECT_URL
   });
   if (error) throw error;
   return data;
