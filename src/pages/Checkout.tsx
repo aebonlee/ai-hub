@@ -4,7 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
-import { createOrder, verifyPayment, updateOrderStatus } from '../utils/supabase';
+import { createOrder, verifyPayment, updateOrderStatus, grantLicense } from '../utils/supabase';
 import { requestPayment } from '../utils/portone';
 import useAOS from '../hooks/useAOS';
 import SEOHead from '../components/SEOHead';
@@ -149,7 +149,22 @@ const Checkout = () => {
         }
       }
 
-      // 4. Payment successful - clear cart and redirect
+      // 4. Grant licenses for purchased items
+      if (user?.id) {
+        for (const item of cartItems) {
+          try {
+            if (item.category === 'bundle') {
+              await grantLicense(user.id, orderId, 'bundle', null);
+            } else if (item.licenseSiteSlug) {
+              await grantLicense(user.id, orderId, 'single', item.licenseSiteSlug);
+            }
+          } catch (licenseErr) {
+            console.warn('License grant failed (payment was successful):', licenseErr);
+          }
+        }
+      }
+
+      // 5. Payment successful - clear cart and redirect
       paymentDone.current = true;
       const confirmState = {
         orderNumber,

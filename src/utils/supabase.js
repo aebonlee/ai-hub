@@ -213,4 +213,45 @@ export const getOrdersByUser = async (userId) => {
   return data || [];
 };
 
+/**
+ * Grant license via RPC (결제 완료 후 호출)
+ */
+export const grantLicense = async (userId, orderId, licenseType, siteSlug) => {
+  const client = getSupabase();
+  if (!client) return { ok: true, demo: true };
+
+  const { data, error } = await client.rpc('grant_license', {
+    p_user_id: userId,
+    p_order_id: orderId,
+    p_license_type: licenseType,
+    p_site_slug: siteSlug || null
+  });
+
+  if (error) {
+    console.error('grantLicense error:', error);
+    throw error;
+  }
+  return data;
+};
+
+/**
+ * Get user licenses (마이페이지 이용권 현황)
+ */
+export const getUserLicenses = async (userId) => {
+  const client = getSupabase();
+  if (!client) return [];
+
+  const { data, error } = await client
+    .from('user_licenses')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('getUserLicenses error:', error);
+    return [];
+  }
+  return data || [];
+};
+
 export default getSupabase;

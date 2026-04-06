@@ -21,6 +21,7 @@ function toProduct(row) {
     isSoldOut: row.is_sold_out,
     isActive: row.is_active,
     sortOrder: row.sort_order,
+    licenseSiteSlug: row.license_site_slug,
     createdAt: row.created_at,
     updatedAt: row.updated_at
   };
