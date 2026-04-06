@@ -8,6 +8,7 @@ const Orders = lazy(() => import('../pages/admin/Orders'));
 const Members = lazy(() => import('../pages/admin/Members'));
 const Products = lazy(() => import('../pages/admin/Products'));
 const ProductForm = lazy(() => import('../pages/admin/ProductForm'));
+const CouponAdmin = lazy(() => import('../pages/admin/CouponAdmin'));
 
 const Loading = () => (
   <div className="admin-loading">
@@ -71,6 +72,14 @@ const AdminLayout = () => {
               <i className="fa-solid fa-box"></i>
               상품 관리
             </NavLink>
+            <NavLink
+              to="/admin/coupons"
+              className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}
+              onClick={() => setSidebarOpen(false)}
+            >
+              <i className="fa-solid fa-ticket"></i>
+              쿠폰 관리
+            </NavLink>
           </nav>
 
           <div className="admin-sidebar-footer">
@@ -92,6 +101,7 @@ const AdminLayout = () => {
               <Route path="products" element={<Products />} />
               <Route path="products/new" element={<ProductForm />} />
               <Route path="products/edit/:id" element={<ProductForm />} />
+              <Route path="coupons" element={<CouponAdmin />} />
               <Route path="*" element={<Navigate to="/admin" replace />} />
             </Routes>
           </Suspense>
