@@ -11,10 +11,6 @@ const Members = () => {
   const [searchInput, setSearchInput] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Modal state
-  const [modal, setModal] = useState(null); // { userId, currentStatus }
-  const [newStatus, setNewStatus] = useState('active');
-  const [reason, setReason] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -34,20 +30,13 @@ const Members = () => {
     setPage(1);
   };
 
-  const openModal = (member) => {
-    setModal({ userId: member.id, currentStatus: member.account_status || 'active' });
-    setNewStatus(member.account_status || 'active');
-    setReason(member.status_reason || '');
-  };
-
-  const handleStatusUpdate = async () => {
-    if (!modal) return;
+  const handleExpire = async (member) => {
+    if (!window.confirm(`${member.display_name || member.email} 회원의 이용기간을 종료하시겠습니까?`)) return;
     try {
-      await updateMemberStatus(modal.userId, newStatus, reason);
-      setModal(null);
+      await updateMemberStatus(member.id, 'expired', '기간종료');
       load();
     } catch (err: any) {
-      alert('상태 변경 실패: ' + err.message);
+      alert('기간종료 실패: ' + err.message);
     }
   };
 
@@ -117,7 +106,7 @@ const Members = () => {
                       <td>
                         <button
                           className="admin-btn admin-btn-sm admin-btn-secondary"
-                          onClick={() => openModal(m)}
+                          onClick={() => handleExpire(m)}
                         >
                           기간종료
                         </button>
@@ -151,40 +140,6 @@ const Members = () => {
         )}
       </div>
 
-      {/* Status Change Modal */}
-      {modal && (
-        <div className="admin-modal-overlay" onClick={() => setModal(null)}>
-          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
-            <h3>회원 기간종료</h3>
-            <div className="admin-form">
-              <div className="admin-form-group">
-                <label>상태</label>
-                <select value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
-                  <option value="active">비활성</option>
-                  <option value="suspended">정지</option>
-                  <option value="banned">차단</option>
-                </select>
-              </div>
-              <div className="admin-form-group">
-                <label>사유</label>
-                <textarea
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                  placeholder="상태 변경 사유를 입력하세요"
-                />
-              </div>
-            </div>
-            <div className="admin-modal-actions">
-              <button className="admin-btn admin-btn-secondary" onClick={() => setModal(null)}>
-                취소
-              </button>
-              <button className="admin-btn admin-btn-primary" onClick={handleStatusUpdate}>
-                변경
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };
