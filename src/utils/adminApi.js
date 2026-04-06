@@ -91,15 +91,14 @@ export async function getAllMembers({ page = 1, limit = 20, search = '' } = {}) 
   return { data: data || [], total: count || 0 };
 }
 
-/** 회원 상태 변경 */
-export async function updateMemberStatus(userId, status, reason = '') {
+/** 회원 비활성화 (is_active = false) */
+export async function updateMemberStatus(userId) {
   const client = getSupabase();
   if (!client) return null;
   const { data, error } = await client
     .from('user_profiles')
     .update({
-      account_status: status,
-      status_reason: reason,
+      is_active: false,
       updated_at: new Date().toISOString(),
     })
     .eq('id', userId)
