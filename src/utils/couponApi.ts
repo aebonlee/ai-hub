@@ -88,7 +88,7 @@ export async function toggleCouponActive(couponId: string, isActive: boolean): P
   if (error) throw error;
 }
 
-/** 사용자: 쿠폰 코드 등록 */
+/** 사용자: 쿠폰 코드 등록 + 라이선스 자동 부여 */
 export async function redeemCoupon(
   code: string,
   userId: string
@@ -120,14 +120,59 @@ export async function redeemCoupon(
 
   if (existing && existing.length > 0) throw new Error('이미 등록한 쿠폰입니다.');
 
-  // 4) 등록
+  // 4) 쿠폰 사용 등록
   const { error: insertErr } = await client
     .from(TABLE_USES)
     .insert({ coupon_id: coupon.id, user_id: userId });
 
   if (insertErr) throw insertErr;
 
+  // 5) user_licenses에 bundle 라이선스 부여 (LicenseGuard 연동)
+  try {
+    await client.rpc('grant_coupon_license', {
+      p_user_id: userId,
+      p_coupon_id: coupon.id,
+      p_license_type: 'bundle',
+      p_site_slug: null,
+    });
+  } catch (licErr) {
+    // grant_coupon_license RPC가 아직 없을 경우 직접 INSERT 시도
+    try {
+      await client
+        .from('user_licenses')
+        .upsert(
+          { user_id: userId, license_type: 'bundle', site_slug: null, order_id: null },
+          { onConflict: 'user_id,license_type,site_slug' }
+        );
+    } catch {
+      console.warn('coupon license grant fallback failed:', licErr);
+    }
+  }
+
   return { success: true, coupon: coupon as Coupon };
+}
+
+/** 사용자에게 활성 쿠폰이 있는지 확인 */
+export async function hasActiveCouponAccess(userId: string): Promise<boolean> {
+  const client = getSupabase();
+  if (!client) return false;
+
+  const { data, error } = await client
+    .from(TABLE_USES)
+    .select(`
+      id,
+      coupon:${TABLE_COUPONS}!coupon_id (
+        is_active, expires_at
+      )
+    `)
+    .eq('user_id', userId);
+
+  if (error || !data) return false;
+
+  const today = new Date().toISOString().split('T')[0];
+  return data.some((row: any) =>
+    row.coupon?.is_active && row.coupon?.expires_at >= today
+  );
 }
 
 /** 사용자: 내 쿠폰 목록 */

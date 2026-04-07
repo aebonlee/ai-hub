@@ -4,7 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { updateProfile } from '../utils/auth';
 import { getUserLicenses } from '../utils/supabase';
-import { redeemCoupon, getMyActiveCoupons } from '../utils/couponApi';
+import { redeemCoupon, getMyActiveCoupons, hasActiveCouponAccess } from '../utils/couponApi';
 import type { MyCoupon } from '../types/coupon';
 import SEOHead from '../components/SEOHead';
 import '../styles/auth.css';
@@ -20,6 +20,7 @@ const MyPage = () => {
   const [message, setMessage] = useState('');
   const [licenses, setLicenses] = useState<any[]>([]);
   const [licensesLoading, setLicensesLoading] = useState(false);
+  const [hasCouponAccess, setHasCouponAccess] = useState(false);
 
   // 쿠폰 상태
   const [couponCode, setCouponCode] = useState('');
@@ -50,6 +51,7 @@ const MyPage = () => {
         setMyCoupons(data);
         setMyCouponsLoading(false);
       });
+      hasActiveCouponAccess(user.id).then(setHasCouponAccess);
     }
   }, [user]);
 
@@ -78,10 +80,16 @@ const MyPage = () => {
     setCouponError(false);
     try {
       await redeemCoupon(couponCode.trim(), user.id);
-      setCouponMsg('쿠폰이 등록되었습니다!');
+      setCouponMsg('쿠폰이 등록되었습니다! 이용권이 활성화됩니다.');
       setCouponCode('');
-      const data = await getMyActiveCoupons(user.id);
-      setMyCoupons(data);
+      // 쿠폰 목록 + 라이선스 목록 + 쿠폰 접근 상태 모두 갱신
+      const [coupons, lics] = await Promise.all([
+        getMyActiveCoupons(user.id),
+        getUserLicenses(user.id),
+      ]);
+      setMyCoupons(coupons);
+      setLicenses(lics);
+      setHasCouponAccess(true);
     } catch (err: any) {
       setCouponMsg(err.message);
       setCouponError(true);
@@ -163,7 +171,7 @@ const MyPage = () => {
               </h3>
               {licensesLoading ? (
                 <p style={{ color: 'var(--text-light)', fontSize: '14px' }}>로딩 중...</p>
-              ) : licenses.length === 0 ? (
+              ) : licenses.length === 0 && !hasCouponAccess ? (
                 <div style={{ padding: '20px', background: 'var(--bg-light)', borderRadius: '12px', textAlign: 'center' }}>
                   <p style={{ color: 'var(--text-light)', fontSize: '14px', marginBottom: '12px' }}>보유한 이용권이 없습니다.</p>
                   <Link to="/shop" className="btn btn-primary" style={{ fontSize: '14px', padding: '8px 20px' }}>
@@ -172,6 +180,33 @@ const MyPage = () => {
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {/* 쿠폰 기반 이용권 표시 */}
+                  {hasCouponAccess && myCoupons.filter(c => {
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    return c.expires_at >= todayStr;
+                  }).map(c => (
+                    <div key={`coupon-${c.id}`} style={{
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                      padding: '12px 16px', background: 'var(--bg-light)', borderRadius: '10px',
+                      border: '1px solid #16a34a40'
+                    }}>
+                      <div>
+                        <span style={{
+                          display: 'inline-block', padding: '2px 8px', borderRadius: '4px', fontSize: '11px',
+                          fontWeight: 600, marginRight: '8px', background: '#16a34a', color: '#fff'
+                        }}>
+                          쿠폰
+                        </span>
+                        <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-main)' }}>
+                          전체 이용권 ({c.label || '쿠폰 등록'})
+                        </span>
+                      </div>
+                      <span style={{ fontSize: '12px', color: 'var(--text-light)' }}>
+                        ~{c.expires_at}
+                      </span>
+                    </div>
+                  ))}
+                  {/* 결제 기반 이용권 표시 */}
                   {licenses.map((lic: any) => (
                     <div key={lic.id} style={{
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
