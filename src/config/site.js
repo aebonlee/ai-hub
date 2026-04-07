@@ -99,6 +99,7 @@ const site = {
       activePath: '/franchise',
       dropdown: [
         { path: '/franchise', labelKey: 'site.nav.franchiseInquiry' },
+        { path: '/pricing', labelKey: 'site.nav.pricing' },
         { path: '/shop', labelKey: 'site.nav.shop' }
       ]
     },
@@ -122,6 +123,7 @@ const site = {
     { path: '/courses/advanced', labelKey: 'site.nav.advanced' },
     { path: '/courses/opensource', labelKey: 'site.nav.opensource' },
     { path: '/franchise', labelKey: 'site.nav.franchise' },
+    { path: '/pricing', labelKey: 'site.nav.pricing' },
     { path: '/about', labelKey: 'site.nav.community' }
   ],
 

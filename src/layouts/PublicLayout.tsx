@@ -31,6 +31,7 @@ const Checkout = lazy(() => import('../pages/Checkout'));
 const OrderConfirmation = lazy(() => import('../pages/OrderConfirmation'));
 const OrderHistory = lazy(() => import('../pages/OrderHistory'));
 const Shop = lazy(() => import('../pages/Shop'));
+const Pricing = lazy(() => import('../pages/Pricing'));
 const NotFound = lazy(() => import('../pages/NotFound'));
 
 const Loading = () => (
@@ -64,6 +65,7 @@ const PublicLayout = () => {
             <Route path="/qna" element={<QnA />} />
             <Route path="/qna/:id" element={<QnADetail />} />
             <Route path="/shop" element={<Shop />} />
+            <Route path="/pricing" element={<Pricing />} />
 
             {/* 로그인 필수 — 개인 활동 (글쓰기, 결제, 마이페이지) */}
             <Route path="/notice/write" element={<AuthGuard><NoticeWrite /></AuthGuard>} />
