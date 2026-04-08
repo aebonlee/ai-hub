@@ -198,7 +198,7 @@ export const translations = {
         aiPrompt: '프롬프트 엔지니어링',
         fineTuning: 'AI 파인튜닝',
         // 오픈소스 AI
-        openclaw: '오픈소스 AI',
+        openclaw: 'OpenClaw',
         // 분양
         pricing: '요금제',
         franchise: 'AI 사이트 분양',
@@ -626,7 +626,7 @@ export const translations = {
         aiPrompt: 'Prompt Engineering',
         fineTuning: 'AI Fine-Tuning',
         // Open Source
-        openclaw: 'Open Source AI',
+        openclaw: 'OpenClaw',
         // Franchise
         pricing: 'Pricing',
         franchise: 'AI Site Licensing',

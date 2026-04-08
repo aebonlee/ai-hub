@@ -70,7 +70,7 @@ const site: SiteConfig = {
     { id: 'automation', name: 'AI 실무 자동화', nameEn: 'AI Work Automation', icon: 'fa-solid fa-gears', path: '/courses/automation' },
     { id: 'data-media', name: 'AI 데이터 & 미디어', nameEn: 'AI Data & Media', icon: 'fa-solid fa-chart-line', path: '/courses/data-media' },
     { id: 'advanced', name: 'AI 개발 심화', nameEn: 'AI Advanced Development', icon: 'fa-solid fa-microchip', path: '/courses/advanced' },
-    { id: 'opensource', name: '오픈소스 AI', nameEn: 'Open Source AI', icon: 'fa-solid fa-code-branch', path: '/courses/opensource' }
+    { id: 'opensource', name: 'OpenClaw', nameEn: 'OpenClaw', icon: 'fa-solid fa-code-branch', path: '/courses/opensource' }
   ],
 
   // 네비게이션 메뉴
@@ -496,8 +496,8 @@ const site: SiteConfig = {
     // ── 오픈소스 AI (opensource) ──
     {
       id: 'openclaw',
-      name: '오픈소스 AI',
-      nameEn: 'Open Source AI',
+      name: 'OpenClaw',
+      nameEn: 'OpenClaw',
       url: 'https://openclaw.dreamitbiz.com',
       icon: 'fa-solid fa-code-branch',
       color: '#0891B2',
