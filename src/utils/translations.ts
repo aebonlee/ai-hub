@@ -197,6 +197,7 @@ export const translations = {
         // AI 개발 심화
         aiPrompt: '프롬프트 엔지니어링',
         fineTuning: 'AI 파인튜닝',
+        llmLangchain: 'LLM & 랭체인',
         // 오픈소스 AI
         openclaw: 'OpenClaw',
         // 분양
@@ -213,7 +214,7 @@ export const translations = {
       home: {
         title: 'DreamIT AI Hub',
         subtitle: 'AI 학습의 새로운 기준',
-        heroDesc: 'ChatGPT부터 파인튜닝까지\n11개 AI 전문 학습사이트에서 실무 역량을 키우세요.',
+        heroDesc: 'ChatGPT부터 LLM & 랭체인까지\n12개 AI 전문 학습사이트에서 실무 역량을 키우세요.',
         ctaStart: 'AI 학습 시작하기',
         ctaFranchise: 'AI 사이트 분양 신청',
         statsTitle: '숫자로 보는 DreamIT AI Hub',
@@ -231,7 +232,7 @@ export const translations = {
         categoryAdvancedDesc: '프롬프트 엔지니어링과 파인튜닝으로 AI 개발 역량을 심화하세요.',
         categoryOpensourceDesc: '오픈소스 AI 도구와 프레임워크를 활용한 에이전트를 구축하세요.',
         ctaBottomTitle: '지금 바로 AI 학습을 시작하세요',
-        ctaBottomDesc: '11개 AI 전문 학습사이트에서 체계적인 교육을 경험하세요.',
+        ctaBottomDesc: '12개 AI 전문 학습사이트에서 체계적인 교육을 경험하세요.',
         ctaBottomBtn: 'AI 학습사이트 보기'
       },
       courses: {
@@ -625,6 +626,7 @@ export const translations = {
         // AI Advanced
         aiPrompt: 'Prompt Engineering',
         fineTuning: 'AI Fine-Tuning',
+        llmLangchain: 'LLM & LangChain',
         // Open Source
         openclaw: 'OpenClaw',
         // Franchise
@@ -641,7 +643,7 @@ export const translations = {
       home: {
         title: 'DreamIT AI Hub',
         subtitle: 'A New Standard in AI Learning',
-        heroDesc: 'From ChatGPT to Fine-Tuning,\nbuild practical AI skills across 11 specialized platforms.',
+        heroDesc: 'From ChatGPT to LLM & LangChain,\nbuild practical AI skills across 12 specialized platforms.',
         ctaStart: 'Start AI Learning',
         ctaFranchise: 'Apply for AI Site License',
         statsTitle: 'DreamIT AI Hub in Numbers',
@@ -659,7 +661,7 @@ export const translations = {
         categoryAdvancedDesc: 'Deepen AI development skills with prompt engineering and fine-tuning.',
         categoryOpensourceDesc: 'Build agents using open-source AI tools and frameworks.',
         ctaBottomTitle: 'Start AI Learning Today',
-        ctaBottomDesc: 'Experience structured AI education across 11 specialized learning sites.',
+        ctaBottomDesc: 'Experience structured AI education across 12 specialized learning sites.',
         ctaBottomBtn: 'View AI Learning Sites'
       },
       courses: {

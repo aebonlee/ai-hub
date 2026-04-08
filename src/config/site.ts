@@ -110,7 +110,8 @@ const site: SiteConfig = {
       activePath: '/courses/advanced',
       dropdown: [
         { path: '/courses/ai-prompt', labelKey: 'site.nav.aiPrompt' },
-        { path: '/courses/fine-tuning', labelKey: 'site.nav.fineTuning' }
+        { path: '/courses/fine-tuning', labelKey: 'site.nav.fineTuning' },
+        { path: '/courses/llm-langchain', labelKey: 'site.nav.llmLangchain' }
       ]
     },
     {
@@ -491,6 +492,38 @@ const site: SiteConfig = {
       featuresEn: ['Practice-oriented learning', 'GPU environment provided', 'Model customization'],
       target: 'AI 모델을 직접 커스터마이징하고 싶은 개발자, 연구자',
       targetEn: 'Developers and researchers who want to customize AI models'
+    },
+
+    {
+      id: 'llm-langchain',
+      name: 'LLM & 랭체인',
+      nameEn: 'LLM & LangChain',
+      url: '#',
+      icon: 'fa-solid fa-link',
+      color: '#065F46',
+      category: 'advanced',
+      description: 'LLM(대규모 언어모델)의 원리와 LangChain 프레임워크를 활용한 AI 애플리케이션 개발을 학습합니다.',
+      descriptionEn: 'Learn LLM principles and AI application development using the LangChain framework.',
+      techStack: ['LLM', 'LangChain', 'RAG', 'Vector DB'],
+      difficulty: 'advanced',
+      curriculum: [
+        'LLM 아키텍처와 원리',
+        'LangChain 프레임워크 기초',
+        'RAG(검색 증강 생성) 구현',
+        'Vector DB 활용과 임베딩',
+        'LLM 기반 애플리케이션 프로젝트'
+      ],
+      curriculumEn: [
+        'LLM architecture and principles',
+        'LangChain framework fundamentals',
+        'RAG (Retrieval-Augmented Generation) implementation',
+        'Vector DB usage and embeddings',
+        'LLM-based application project'
+      ],
+      features: ['LLM 심화 학습', 'LangChain 실습', 'RAG 구현 프로젝트'],
+      featuresEn: ['Advanced LLM learning', 'LangChain practice', 'RAG implementation project'],
+      target: 'AI 개발자, LLM 활용에 관심 있는 엔지니어',
+      targetEn: 'AI developers, engineers interested in LLM utilization'
     },
 
     // ── 오픈소스 AI (opensource) ──
