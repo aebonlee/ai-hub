@@ -3,12 +3,17 @@
  * AI 전문 학습사이트 허브의 브랜드, 메뉴, 학습사이트 정보를 정의합니다.
  */
 
-const site = {
+import type { SiteConfig } from '../types';
+
+const site: SiteConfig = {
+  id: 'ai-hub',
+
   // 사이트 기본 정보
   name: 'DreamIT AI Hub',
   nameKo: '드림아이티 AI 허브',
   description: 'DreamIT AI Hub - AI 전문 학습사이트 허브. 챗봇, 자동화, 데이터, 미디어, 개발 심화까지 11개 AI 학습 플랫폼',
   url: 'https://ai-hub.dreamitbiz.com',
+  dbPrefix: 'ah_',
 
   // 부모 사이트
   parentSite: {
@@ -21,20 +26,34 @@ const site = {
     parts: [
       { text: 'AI', className: 'brand-biz' },
       { text: ' Hub', className: 'brand-dream' }
-    ],
-    footerLine1: [
-      { text: 'Dream', className: 'brand-dream' },
-      { text: 'IT', className: 'brand-it' },
-      { text: ' Biz', className: 'brand-biz' }
-    ],
-    footerLine2: [
-      { text: 'AI', className: 'brand-biz' },
-      { text: ' Hub', className: 'brand-dream' }
     ]
   },
 
   // 테마 컬러 (다크 블루)
   themeColor: '#1E3A8A',
+
+  company: {
+    name: '드림아이티비즈(DreamIT Biz)',
+    ceo: '이애본',
+    bizNumber: '000-00-00000',
+    address: '경기도 수원시',
+    email: 'aebonlee@gmail.com',
+    phone: '010-0000-0000',
+  },
+  features: {
+    shop: true,
+    community: true,
+    search: true,
+    auth: true,
+    license: false,
+  },
+  colors: [
+    { name: 'blue' as const, color: '#1E3A8A' },
+    { name: 'green' as const, color: '#065F46' },
+    { name: 'purple' as const, color: '#5B21B6' },
+    { name: 'red' as const, color: '#991B1B' },
+    { name: 'orange' as const, color: '#92400E' },
+  ],
 
   // 5개 AI 카테고리
   categories: [
@@ -146,6 +165,7 @@ const site = {
       icon: 'fa-solid fa-message',
       color: '#10A37F',
       category: 'chatbot',
+      price: 49000,
       description: 'OpenAI의 ChatGPT를 완벽하게 활용하는 방법을 학습합니다. GPT-4o, 플러그인, Custom GPTs까지 체계적으로 다룹니다.',
       descriptionEn: 'Learn to fully utilize OpenAI\'s ChatGPT. Systematically covers GPT-4o, plugins, and Custom GPTs.',
       techStack: ['ChatGPT', 'GPT-4o', 'Custom GPTs', 'API'],
@@ -177,6 +197,7 @@ const site = {
       icon: 'fa-solid fa-wand-magic-sparkles',
       color: '#D97706',
       category: 'chatbot',
+      price: 69000,
       description: 'Anthropic의 Claude AI를 완벽하게 활용하는 방법을 학습합니다. Claude API, 프롬프트 최적화, MCP 활용까지 체계적으로 다룹니다.',
       descriptionEn: 'Learn to fully utilize Anthropic\'s Claude AI. Covers Claude API, prompt optimization, and MCP.',
       techStack: ['Claude', 'API', 'Prompt Engineering', 'MCP'],
@@ -208,6 +229,7 @@ const site = {
       icon: 'fa-solid fa-gem',
       color: '#4285F4',
       category: 'chatbot',
+      price: 49000,
       description: 'Google의 Gemini AI를 활용하는 방법을 학습합니다. 멀티모달 AI, Gemini API, Google AI Studio 활용까지 다룹니다.',
       descriptionEn: 'Learn to utilize Google\'s Gemini AI. Covers multimodal AI, Gemini API, and Google AI Studio.',
       techStack: ['Gemini', 'Google AI Studio', 'API', 'Multimodal'],
@@ -239,6 +261,7 @@ const site = {
       icon: 'fa-solid fa-bolt',
       color: '#F59E0B',
       category: 'chatbot',
+      price: 49000,
       description: 'GenSpark AI를 활용한 콘텐츠 생성과 업무 효율화 기법을 학습합니다.',
       descriptionEn: 'Learn content generation and work efficiency techniques using GenSpark AI.',
       techStack: ['GenSpark', 'AI 콘텐츠', '자동생성', '워크플로우'],
@@ -272,6 +295,7 @@ const site = {
       icon: 'fa-solid fa-gears',
       color: '#2563EB',
       category: 'automation',
+      price: 69000,
       description: 'AI를 활용한 문서 작성, 데이터 처리, 반복 업무 자동화 기법을 학습합니다.',
       descriptionEn: 'Learn AI-powered automation for document creation, data processing, and repetitive tasks.',
       techStack: ['ChatGPT', 'Python', 'API 연동', '자동화'],
@@ -303,6 +327,7 @@ const site = {
       icon: 'fa-solid fa-user-gear',
       color: '#4F46E5',
       category: 'automation',
+      price: 69000,
       description: '생성형 AI를 넘어 실무에 적용하는 AI Agent 학습 플랫폼. 리서치, 문서화, 자동화, 아이디어 구체화를 위한 실무형 AI Agent 교육을 제공합니다.',
       descriptionEn: 'An AI Agent learning platform that goes beyond generative AI to real-world applications. Provides practical AI Agent training for research, documentation, automation, and idea development.',
       techStack: ['AI Agent', 'Claude', 'ChatGPT', 'Automation'],
@@ -336,6 +361,7 @@ const site = {
       icon: 'fa-solid fa-chart-line',
       color: '#DC2626',
       category: 'data-media',
+      price: 69000,
       description: 'AI를 활용하여 데이터를 분석하고 인사이트를 도출하는 능력을 키웁니다.',
       descriptionEn: 'Build the ability to analyze data and derive insights using AI.',
       techStack: ['Python', 'Pandas', 'ChatGPT', '시각화'],
@@ -367,6 +393,7 @@ const site = {
       icon: 'fa-solid fa-image',
       color: '#EA580C',
       category: 'data-media',
+      price: 49000,
       description: 'Midjourney, DALL-E, Stable Diffusion 등을 활용한 AI 이미지/영상 생성 기법을 학습합니다.',
       descriptionEn: 'Learn AI image and video generation techniques using Midjourney, DALL-E, and Stable Diffusion.',
       techStack: ['Midjourney', 'DALL-E', 'Stable Diffusion', 'Prompt'],
@@ -400,6 +427,7 @@ const site = {
       icon: 'fa-solid fa-comments',
       color: '#7C3AED',
       category: 'advanced',
+      price: 49000,
       description: 'ChatGPT, Claude 등 AI 모델에서 원하는 결과를 이끌어내는 프롬프트 작성 기법을 학습합니다.',
       descriptionEn: 'Learn prompt crafting techniques to get desired results from AI models like ChatGPT and Claude.',
       techStack: ['ChatGPT', 'Claude', 'Prompt', 'Few-shot'],
@@ -431,6 +459,7 @@ const site = {
       icon: 'fa-solid fa-sliders',
       color: '#9333EA',
       category: 'advanced',
+      price: 89000,
       description: 'AI 모델을 내 목적에 맞게 미세조정(Fine-Tuning)하는 방법을 학습합니다. 커스텀 데이터셋 구축부터 모델 배포까지 전 과정을 다룹니다.',
       descriptionEn: 'Learn how to fine-tune AI models for your specific needs. Covers the entire process from custom dataset creation to model deployment.',
       techStack: ['Fine-Tuning', 'Python', 'Hugging Face', 'LoRA'],
@@ -464,6 +493,7 @@ const site = {
       icon: 'fa-solid fa-code-branch',
       color: '#0891B2',
       category: 'opensource',
+      price: 69000,
       description: 'Open Claw 프레임워크를 활용한 AI 에이전트 구축과 오픈소스 AI 도구 활용법을 학습합니다.',
       descriptionEn: 'Learn to build AI agents with the Open Claw framework and utilize open-source AI tools.',
       techStack: ['Open Claw', 'AI Agent', 'Python', '오픈소스'],

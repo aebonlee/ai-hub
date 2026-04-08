@@ -35,11 +35,11 @@ const NoticeWrite = () => {
           navigate('/notice', { replace: true });
           return;
         }
-        setTitle(data.title || '');
-        setTitleEn(data.titleEn || '');
-        setContent(data.content || '');
-        setContentEn(data.contentEn || '');
-        setIsPinned(data.isPinned || false);
+        setTitle((data.title as string) || '');
+        setTitleEn((data.titleEn as string) || '');
+        setContent((data.content as string) || '');
+        setContentEn((data.contentEn as string) || '');
+        setIsPinned((data.isPinned as boolean) || false);
       } catch (err: any) {
         console.error('Load notice for edit error:', err);
       } finally {

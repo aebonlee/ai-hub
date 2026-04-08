@@ -3,6 +3,23 @@
  * KG이니시스 경유 카드결제/계좌이체
  */
 
+import type { PaymentRequest, PaymentResult } from '../types';
+
+declare global {
+  interface Window {
+    IMP?: {
+      init: (code: string) => void;
+      request_pay: (params: Record<string, unknown>, callback: (response: {
+        success: boolean;
+        imp_uid?: string;
+        merchant_uid?: string;
+        error_code?: string;
+        error_msg?: string;
+      }) => void) => void;
+    };
+  }
+}
+
 const IMP_CODE = import.meta.env.VITE_IMP_CODE;
 const PG_PROVIDER = import.meta.env.VITE_PG_PROVIDER;
 
@@ -22,15 +39,14 @@ function getIMP() {
 
 /**
  * Request payment via PortOne V1 SDK
- * @param {Object} params
- * @param {string} params.orderId - Merchant UID (order number)
- * @param {string} params.orderName - Display name for the order
- * @param {number} params.totalAmount - Total amount in KRW
- * @param {string} params.payMethod - 'CARD' or 'TRANSFER'
- * @param {Object} params.customer - { fullName, email, phoneNumber }
- * @returns {Promise<Object>} Payment result
  */
-export const requestPayment = ({ orderId, orderName, totalAmount, payMethod, customer }) => {
+export const requestPayment = ({
+  orderId,
+  orderName,
+  totalAmount,
+  payMethod,
+  customer
+}: PaymentRequest): Promise<PaymentResult> => {
   return new Promise((resolve) => {
     const IMP = getIMP();
 
@@ -43,7 +59,7 @@ export const requestPayment = ({ orderId, orderName, totalAmount, payMethod, cus
       return;
     }
 
-    const payMethodMap = { CARD: 'card', TRANSFER: 'trans' };
+    const payMethodMap: Record<string, string> = { CARD: 'card', TRANSFER: 'trans' };
 
     IMP.request_pay(
       {
@@ -59,8 +75,8 @@ export const requestPayment = ({ orderId, orderName, totalAmount, payMethod, cus
       (response) => {
         if (response.success) {
           resolve({
-            paymentId: response.imp_uid,
-            txId: response.merchant_uid,
+            paymentId: response.imp_uid!,
+            txId: response.merchant_uid!,
           });
         } else {
           resolve({

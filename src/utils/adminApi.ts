@@ -1,23 +1,48 @@
 /**
- * adminApi.js — 관리자 전용 API 유틸리티
+ * adminApi.ts — 관리자 전용 API 유틸리티
  */
-import getSupabase from './supabase';
+import getSupabase, { TABLES } from './supabase';
+import type { Order, UserProfile, PaymentStatus } from '../types';
+
+interface DashboardStats {
+  orders: number;
+  revenue: number;
+  members: number;
+  products: number;
+}
+
+interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+}
+
+interface OrderListParams {
+  page?: number;
+  limit?: number;
+  status?: PaymentStatus | null;
+}
+
+interface MemberListParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
 
 /** 대시보드 통계 조회 */
-export async function getDashboardStats() {
+export async function getDashboardStats(): Promise<DashboardStats> {
   const client = getSupabase();
   if (!client) return { orders: 0, revenue: 0, members: 0, products: 0 };
 
   const [ordersRes, membersRes, productsRes] = await Promise.all([
-    client.from('ah_orders').select('id, total_amount, status'),
+    client.from(TABLES.orders).select('id, total_amount, status'),
     client.from('user_profiles').select('id', { count: 'exact', head: true }),
-    client.from('ah_products').select('id', { count: 'exact', head: true }).eq('is_active', true),
+    client.from(TABLES.products).select('id', { count: 'exact', head: true }).eq('is_active', true),
   ]);
 
   const orders = ordersRes.data || [];
   const revenue = orders
-    .filter((o) => o.status === 'paid')
-    .reduce((sum, o) => sum + (o.total_amount || 0), 0);
+    .filter((o: Record<string, unknown>) => o.status === 'paid')
+    .reduce((sum: number, o: Record<string, unknown>) => sum + ((o.total_amount as number) || 0), 0);
 
   return {
     orders: orders.length,
@@ -28,16 +53,19 @@ export async function getDashboardStats() {
 }
 
 /** 전체 주문 조회 (페이지네이션 + 상태 필터) */
-export async function getAllOrders({ page = 1, limit = 20, status = null } = {}) {
+export async function getAllOrders(
+  { page = 1, limit = 20, status = null }: OrderListParams = {}
+): Promise<PaginatedResult<Order>> {
   const client = getSupabase();
   if (!client) return { data: [], total: 0 };
 
   const from = (page - 1) * limit;
   const to = from + limit - 1;
 
+  const selectQuery = `*, ${TABLES.order_items}(*)`;
   let query = client
-    .from('ah_orders')
-    .select('*, ah_order_items(*)', { count: 'exact' })
+    .from(TABLES.orders)
+    .select(selectQuery, { count: 'exact' })
     .order('created_at', { ascending: false })
     .range(from, to);
 
@@ -48,25 +76,30 @@ export async function getAllOrders({ page = 1, limit = 20, status = null } = {})
     console.error('getAllOrders error:', error);
     return { data: [], total: 0 };
   }
-  return { data: data || [], total: count || 0 };
+  return { data: (data || []) as unknown as Order[], total: count || 0 };
 }
 
 /** 주문 상태 변경 */
-export async function updateOrderStatus(orderId, status) {
+export async function updateOrderStatus(
+  orderId: string,
+  status: PaymentStatus
+): Promise<Order | null> {
   const client = getSupabase();
   if (!client) return null;
   const { data, error } = await client
-    .from('ah_orders')
+    .from(TABLES.orders)
     .update({ status, updated_at: new Date().toISOString() })
     .eq('id', orderId)
     .select()
     .single();
   if (error) throw error;
-  return data;
+  return data as Order;
 }
 
 /** 전체 회원 조회 (페이지네이션 + 검색) */
-export async function getAllMembers({ page = 1, limit = 20, search = '' } = {}) {
+export async function getAllMembers(
+  { page = 1, limit = 20, search = '' }: MemberListParams = {}
+): Promise<PaginatedResult<UserProfile>> {
   const client = getSupabase();
   if (!client) return { data: [], total: 0 };
 
@@ -88,11 +121,11 @@ export async function getAllMembers({ page = 1, limit = 20, search = '' } = {}) 
     console.error('getAllMembers error:', error);
     return { data: [], total: 0 };
   }
-  return { data: data || [], total: count || 0 };
+  return { data: (data || []) as UserProfile[], total: count || 0 };
 }
 
 /** 회원 비활성화 (is_active = false) */
-export async function updateMemberStatus(userId) {
+export async function updateMemberStatus(userId: string): Promise<UserProfile | null> {
   const client = getSupabase();
   if (!client) return null;
   const { data, error } = await client
@@ -105,5 +138,5 @@ export async function updateMemberStatus(userId) {
     .select()
     .single();
   if (error) throw error;
-  return data;
+  return data as UserProfile;
 }

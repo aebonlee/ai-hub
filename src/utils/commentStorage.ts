@@ -1,17 +1,16 @@
 /**
- * commentStorage.js
+ * commentStorage.ts
  * 댓글 CRUD — Supabase 전용 (boardStorage.js 패턴 준수)
  */
 
+import type { CommentInput } from '../types';
 import getSupabase from './supabase';
 import { toCamel } from './dbHelpers';
 
 /**
  * 특정 게시글의 댓글 목록 조회
- * @param {number|string} postId - 게시글 ID
- * @param {string} postType - 'blog' | 'board'
  */
-export async function getComments(postId, postType) {
+export async function getComments(postId: number | string, postType: string): Promise<Record<string, unknown>[]> {
   const client = getSupabase();
   if (!client) return [];
   const { data, error } = await client
@@ -29,9 +28,8 @@ export async function getComments(postId, postType) {
 
 /**
  * 댓글 작성
- * @param {{ postId: number, postType: string, authorId: string, authorName: string, content: string }}
  */
-export async function createComment({ postId, postType, authorId, authorName, content }) {
+export async function createComment({ postId, postType, authorId, authorName, content }: CommentInput): Promise<Record<string, unknown> | null> {
   const client = getSupabase();
   if (!client) return null;
   const { data, error } = await client
@@ -55,9 +53,8 @@ export async function createComment({ postId, postType, authorId, authorName, co
 
 /**
  * 댓글 삭제
- * @param {number} id - 댓글 ID
  */
-export async function deleteComment(id) {
+export async function deleteComment(id: number): Promise<boolean> {
   const client = getSupabase();
   if (!client) return false;
   const { error } = await client

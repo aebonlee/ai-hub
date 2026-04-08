@@ -1,6 +1,7 @@
 /**
- * auth.js — Supabase Auth 헬퍼 함수
+ * auth.ts — Supabase Auth 헬퍼 함수
  */
+import type { UserProfile } from '../types';
 import getSupabase from './supabase';
 
 const REDIRECT_URL = typeof window !== 'undefined'
@@ -35,7 +36,7 @@ export async function signInWithKakao() {
 }
 
 /** 이메일/비밀번호 로그인 */
-export async function signInWithEmail(email, password) {
+export async function signInWithEmail(email: string, password: string) {
   const client = getSupabase();
   if (!client) throw new Error('Supabase not configured');
   const { data, error } = await client.auth.signInWithPassword({ email, password });
@@ -44,7 +45,7 @@ export async function signInWithEmail(email, password) {
 }
 
 /** 이메일 회원가입 */
-export async function signUp(email, password, displayName) {
+export async function signUp(email: string, password: string, displayName: string) {
   const client = getSupabase();
   if (!client) throw new Error('Supabase not configured');
   const { data, error } = await client.auth.signUp({
@@ -71,7 +72,7 @@ export async function signOut() {
 }
 
 /** 프로필 조회 */
-export async function getProfile(userId) {
+export async function getProfile(userId: string): Promise<UserProfile | null> {
   const client = getSupabase();
   if (!client) return null;
   const { data, error } = await client
@@ -83,11 +84,11 @@ export async function getProfile(userId) {
     console.error('getProfile error:', error);
     return null;
   }
-  return data;
+  return data as UserProfile;
 }
 
 /** 비밀번호 재설정 이메일 전송 */
-export async function resetPassword(email) {
+export async function resetPassword(email: string) {
   const client = getSupabase();
   if (!client) throw new Error('Supabase not configured');
   const { data, error } = await client.auth.resetPasswordForEmail(email, {
@@ -98,7 +99,10 @@ export async function resetPassword(email) {
 }
 
 /** 프로필 업데이트 */
-export async function updateProfile(userId, updates) {
+export async function updateProfile(
+  userId: string,
+  updates: Partial<UserProfile>
+): Promise<UserProfile | null> {
   const client = getSupabase();
   if (!client) return null;
   const { data, error } = await client
@@ -108,5 +112,5 @@ export async function updateProfile(userId, updates) {
     .select()
     .single();
   if (error) throw error;
-  return data;
+  return data as UserProfile;
 }

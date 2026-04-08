@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const useAOS = () => {
+const useAOS = (): void => {
   const { pathname } = useLocation();
 
   useLayoutEffect(() => {
@@ -13,7 +13,7 @@ const useAOS = () => {
       el.classList.remove('aos-animate');
       const rect = el.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0) {
-        el.style.transition = 'none';
+        (el as HTMLElement).style.transition = 'none';
         el.classList.add('aos-animate');
       }
     });
@@ -21,7 +21,7 @@ const useAOS = () => {
     // Restore transitions after first paint (for future scroll animations)
     requestAnimationFrame(() => {
       document.querySelectorAll('[data-aos].aos-animate').forEach((el) => {
-        el.style.transition = '';
+        (el as HTMLElement).style.transition = '';
       });
     });
 
@@ -30,10 +30,10 @@ const useAOS = () => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            const delay = entry.target.getAttribute('data-aos-delay') || 0;
+            const delay = entry.target.getAttribute('data-aos-delay') || '0';
             setTimeout(() => {
               entry.target.classList.add('aos-animate');
-            }, parseInt(delay));
+            }, Number(delay));
           }
         });
       },

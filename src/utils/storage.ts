@@ -1,17 +1,17 @@
 /**
- * storage.js — Supabase Storage 업로드/삭제 헬퍼
+ * storage.ts — Supabase Storage 업로드/삭제 헬퍼
  */
 import getSupabase from './supabase';
 
 const BUCKET = 'media';
 
 /**
- * 이미지 업로드 → 공개 URL 반환
- * @param {File} file - 업로드할 파일
- * @param {string} folder - 폴더 경로 (예: 'gallery', 'blog', 'products')
- * @returns {string} 공개 URL
+ * 이미지 업로드 -> 공개 URL 반환
+ * @param file - 업로드할 파일
+ * @param folder - 폴더 경로 (예: 'gallery', 'blog', 'products')
+ * @returns 공개 URL
  */
-export async function uploadImage(file, folder = 'uploads') {
+export async function uploadImage(file: File, folder: string = 'uploads'): Promise<string> {
   const client = getSupabase();
   if (!client) throw new Error('Supabase not configured');
 
@@ -36,9 +36,9 @@ export async function uploadImage(file, folder = 'uploads') {
 
 /**
  * Storage에서 파일 삭제
- * @param {string} publicUrl - 삭제할 파일의 공개 URL
+ * @param publicUrl - 삭제할 파일의 공개 URL
  */
-export async function deleteImage(publicUrl) {
+export async function deleteImage(publicUrl: string): Promise<void> {
   const client = getSupabase();
   if (!client) return;
 

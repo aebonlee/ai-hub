@@ -1,17 +1,16 @@
 /**
- * searchStorage.js
+ * searchStorage.ts
  * 통합 검색 — blog/board/gallery ilike 병렬 검색
  */
 
+import type { SearchResultItem, SearchResults } from '../types';
 import getSupabase from './supabase';
 import { toCamel } from './dbHelpers';
 
 /**
  * 통합 검색: blog_posts, board_posts, gallery_items에서 ilike 병렬 검색
- * @param {string} query - 검색어
- * @returns {{ blog: Array, board: Array, gallery: Array }}
  */
-export async function searchAll(query) {
+export async function searchAll(query: string): Promise<SearchResults> {
   const client = getSupabase();
   if (!client || !query.trim()) {
     return { blog: [], board: [], gallery: [] };
@@ -41,8 +40,8 @@ export async function searchAll(query) {
   ]);
 
   return {
-    blog: (blogRes.data || []).map(toCamel),
-    board: (boardRes.data || []).map(toCamel),
-    gallery: (galleryRes.data || []).map(toCamel)
+    blog: (blogRes.data || []).map(toCamel) as unknown as SearchResultItem[],
+    board: (boardRes.data || []).map(toCamel) as unknown as SearchResultItem[],
+    gallery: (galleryRes.data || []).map(toCamel) as unknown as SearchResultItem[]
   };
 }

@@ -1,13 +1,16 @@
 /**
- * productStorage.js — 상품 CRUD (Supabase products 테이블)
- * 템플릿: 본사이트 데이터 의존성 제거, fallback은 빈 배열
+ * productStorage.ts — 상품 CRUD (Supabase ah_products 테이블)
+ * ai-hub 전용: ah_ 접두사 사용
  */
+import type { Product, ProductInput, ProductRow } from '../types';
 import getSupabase from './supabase';
 
-// 템플릿: fallback 데이터 없음 (각 사이트에서 Supabase로 관리)
-const fallbackProducts = [];
+const TABLE = 'ah_products';
 
-function toProduct(row) {
+// 템플릿: fallback 데이터 없음 (각 사이트에서 Supabase로 관리)
+const fallbackProducts: Product[] = [];
+
+function toProduct(row: ProductRow): Product {
   return {
     id: row.id,
     slug: row.slug,
@@ -28,12 +31,12 @@ function toProduct(row) {
 }
 
 /** 전체 상품 조회 (활성 상품만) */
-export async function getProducts(includeInactive = false) {
+export async function getProducts(includeInactive: boolean = false): Promise<Product[]> {
   const client = getSupabase();
   if (!client) return fallbackProducts;
 
   let query = client
-    .from('ah_products')
+    .from(TABLE)
     .select('*')
     .order('sort_order', { ascending: true })
     .order('id', { ascending: true });
@@ -48,15 +51,15 @@ export async function getProducts(includeInactive = false) {
     return fallbackProducts;
   }
   if (!data || data.length === 0) return fallbackProducts;
-  return data.map(toProduct);
+  return (data as ProductRow[]).map(toProduct);
 }
 
 /** 단일 상품 조회 */
-export async function getProduct(id) {
+export async function getProduct(id: number): Promise<Product | null> {
   const client = getSupabase();
   if (!client) return null;
   const { data, error } = await client
-    .from('ah_products')
+    .from(TABLE)
     .select('*')
     .eq('id', Number(id))
     .single();
@@ -64,15 +67,15 @@ export async function getProduct(id) {
     console.error('getProduct error:', error);
     return null;
   }
-  return toProduct(data);
+  return toProduct(data as ProductRow);
 }
 
 /** 상품 등록 */
-export async function createProduct(productData) {
+export async function createProduct(productData: ProductInput): Promise<Product | null> {
   const client = getSupabase();
   if (!client) return null;
   const { data, error } = await client
-    .from('ah_products')
+    .from(TABLE)
     .insert({
       slug: productData.slug,
       category: productData.category,
@@ -87,14 +90,14 @@ export async function createProduct(productData) {
     .select()
     .single();
   if (error) throw error;
-  return toProduct(data);
+  return toProduct(data as ProductRow);
 }
 
 /** 상품 수정 */
-export async function updateProduct(id, updates) {
+export async function updateProduct(id: number, updates: ProductInput): Promise<Product | null> {
   const client = getSupabase();
   if (!client) return null;
-  const payload = { updated_at: new Date().toISOString() };
+  const payload: Record<string, unknown> = { updated_at: new Date().toISOString() };
   if (updates.slug !== undefined) payload.slug = updates.slug;
   if (updates.category !== undefined) payload.category = updates.category;
   if (updates.title !== undefined) payload.title = updates.title;
@@ -108,21 +111,21 @@ export async function updateProduct(id, updates) {
   if (updates.sortOrder !== undefined) payload.sort_order = updates.sortOrder;
 
   const { data, error } = await client
-    .from('ah_products')
+    .from(TABLE)
     .update(payload)
     .eq('id', Number(id))
     .select()
     .single();
   if (error) throw error;
-  return toProduct(data);
+  return toProduct(data as ProductRow);
 }
 
 /** 상품 삭제 (소프트 삭제) */
-export async function deleteProduct(id) {
+export async function deleteProduct(id: number): Promise<Product | null> {
   return updateProduct(id, { isActive: false });
 }
 
 /** 판매완료 토글 */
-export async function toggleSoldOut(id, isSoldOut) {
+export async function toggleSoldOut(id: number, isSoldOut: boolean): Promise<Product | null> {
   return updateProduct(id, { isSoldOut });
 }

@@ -1,13 +1,22 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import type { OrderData, Order, PaymentStatus } from '../types';
+import site from '../config/site';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Supabase client - initialized only when env vars are set
-let supabase = null;
-let _memoryOrders = [];
+/** Supabase 테이블명 (site.dbPrefix 기반) */
+export const TABLES = {
+  orders: `${site.dbPrefix}orders`,
+  order_items: `${site.dbPrefix}order_items`,
+  products: `${site.dbPrefix}products`,
+} as const;
 
-const getSupabase = () => {
+// Supabase client - initialized only when env vars are set
+let supabase: SupabaseClient | null = null;
+let _memoryOrders: Order[] = [];
+
+const getSupabase = (): SupabaseClient | null => {
   if (!supabase && supabaseUrl && supabaseAnonKey) {
     supabase = createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
@@ -25,11 +34,11 @@ const getSupabase = () => {
  * Create an order with order items
  * Falls back to in-memory store when Supabase is not configured
  */
-export const createOrder = async (orderData) => {
+export const createOrder = async (orderData: OrderData): Promise<Order> => {
   const client = getSupabase();
 
   if (!client) {
-    const order = {
+    const order: Order = {
       id: crypto.randomUUID(),
       ...orderData,
       payment_status: 'pending',
@@ -40,7 +49,7 @@ export const createOrder = async (orderData) => {
   }
 
   // Insert order
-  const orderPayload = {
+  const orderPayload: Record<string, unknown> = {
     order_number: orderData.order_number,
     user_email: orderData.user_email,
     user_name: orderData.user_name,
@@ -51,7 +60,7 @@ export const createOrder = async (orderData) => {
   if (orderData.user_id) orderPayload.user_id = orderData.user_id;
 
   const { data: order, error: orderError } = await client
-    .from('ah_orders')
+    .from(TABLES.orders)
     .insert(orderPayload)
     .select()
     .single();
@@ -61,7 +70,7 @@ export const createOrder = async (orderData) => {
   // Insert order items
   if (orderData.items && orderData.items.length > 0) {
     const { error: itemsError } = await client
-      .from('ah_order_items')
+      .from(TABLES.order_items)
       .insert(
         orderData.items.map(item => ({
           order_id: order.id,
@@ -75,14 +84,14 @@ export const createOrder = async (orderData) => {
     if (itemsError) throw itemsError;
   }
 
-  return order;
+  return order as Order;
 };
 
 /**
  * Get order by order number
  * Falls back to in-memory store when Supabase is not configured
  */
-export const getOrderByNumber = async (orderNumber) => {
+export const getOrderByNumber = async (orderNumber: string): Promise<Order | null> => {
   const client = getSupabase();
 
   if (!client) {
@@ -90,7 +99,7 @@ export const getOrderByNumber = async (orderNumber) => {
   }
 
   const { data: orders, error } = await client
-    .from('ah_orders')
+    .from(TABLES.orders)
     .select('*')
     .eq('order_number', orderNumber)
     .limit(1);
@@ -102,21 +111,22 @@ export const getOrderByNumber = async (orderNumber) => {
 
   // Fetch order items
   const { data: items } = await client
-    .from('ah_order_items')
+    .from(TABLES.order_items)
     .select('*')
     .eq('order_id', order.id);
 
-  return { ...order, items: items || [] };
+  return { ...order, items: items || [] } as Order;
 };
 
 /**
  * Update order payment status
- * @param {string} orderId
- * @param {string} status - 'pending' | 'paid' | 'failed' | 'cancelled' | 'refunded'
- * @param {string} [paymentId] - portone payment ID
- * @param {string} [cancelReason] - reason for cancellation
  */
-export const updateOrderStatus = async (orderId, status, paymentId, cancelReason) => {
+export const updateOrderStatus = async (
+  orderId: string,
+  status: PaymentStatus,
+  paymentId?: string,
+  cancelReason?: string
+): Promise<Order | undefined> => {
   const client = getSupabase();
 
   if (!client) {
@@ -133,7 +143,7 @@ export const updateOrderStatus = async (orderId, status, paymentId, cancelReason
     return _memoryOrders[idx];
   }
 
-  const updatePayload = { payment_status: status };
+  const updatePayload: Record<string, unknown> = { payment_status: status };
   if (status === 'paid') updatePayload.paid_at = new Date().toISOString();
   if (status === 'cancelled') {
     updatePayload.cancelled_at = new Date().toISOString();
@@ -141,30 +151,30 @@ export const updateOrderStatus = async (orderId, status, paymentId, cancelReason
   }
 
   // Build full payload with optional columns (may not exist in DB yet)
-  const extras = {};
+  const extras: Record<string, unknown> = {};
   if (paymentId) extras.portone_payment_id = paymentId;
 
-  let result = null;
+  let result: Order[] | null = null;
 
   try {
     const { data, error } = await client
-      .from('ah_orders')
+      .from(TABLES.orders)
       .update({ ...updatePayload, ...extras })
       .eq('id', orderId)
       .select();
 
     if (error) throw error;
-    result = data;
+    result = data as Order[] | null;
   } catch {
     // Fallback: update without optional columns
     const { data, error } = await client
-      .from('ah_orders')
+      .from(TABLES.orders)
       .update(updatePayload)
       .eq('id', orderId)
       .select();
 
     if (error) throw error;
-    result = data;
+    result = data as Order[] | null;
   }
 
   if (!result || result.length === 0) {
@@ -177,7 +187,10 @@ export const updateOrderStatus = async (orderId, status, paymentId, cancelReason
 /**
  * Verify payment via Edge Function
  */
-export const verifyPayment = async (paymentId, orderId) => {
+export const verifyPayment = async (
+  paymentId: string,
+  orderId: string
+): Promise<{ verified: boolean }> => {
   const client = getSupabase();
   if (!client) {
     // Fallback: auto-approve for dev/demo
@@ -190,19 +203,20 @@ export const verifyPayment = async (paymentId, orderId) => {
   });
 
   if (error) throw error;
-  return data;
+  return data as { verified: boolean };
 };
 
 /**
  * Get orders by user ID
  */
-export const getOrdersByUser = async (userId) => {
+export const getOrdersByUser = async (userId: string): Promise<Order[]> => {
   const client = getSupabase();
   if (!client) return [];
 
+  const selectQuery = `*, ${TABLES.order_items}(*)`;
   const { data, error } = await client
-    .from('ah_orders')
-    .select('*, ah_order_items(*)')
+    .from(TABLES.orders)
+    .select(selectQuery)
     .eq('user_id', userId)
     .order('created_at', { ascending: false });
 
@@ -210,13 +224,18 @@ export const getOrdersByUser = async (userId) => {
     console.error('getOrdersByUser error:', error);
     return [];
   }
-  return data || [];
+  return (data || []) as unknown as Order[];
 };
 
 /**
  * Grant license via RPC (결제 완료 후 호출)
  */
-export const grantLicense = async (userId, orderId, licenseType, siteSlug) => {
+export const grantLicense = async (
+  userId: string,
+  orderId: string,
+  licenseType: string,
+  siteSlug?: string | null
+): Promise<Record<string, unknown>> => {
   const client = getSupabase();
   if (!client) return { ok: true, demo: true };
 
@@ -231,18 +250,19 @@ export const grantLicense = async (userId, orderId, licenseType, siteSlug) => {
     console.error('grantLicense error:', error);
     throw error;
   }
-  return data;
+  return data as Record<string, unknown>;
 };
 
 /**
  * Get user licenses (마이페이지 이용권 현황)
+ * NOTE: user_licenses는 모든 허브에서 공유하는 테이블 (prefix 없음)
  */
-export const getUserLicenses = async (userId) => {
+export const getUserLicenses = async (userId: string): Promise<Record<string, unknown>[]> => {
   const client = getSupabase();
   if (!client) return [];
 
   const { data, error } = await client
-    .from('user_licenses')
+    .from('user_licenses')  // 공유 테이블 — prefix 미적용
     .select('*')
     .eq('user_id', userId)
     .order('created_at', { ascending: false });

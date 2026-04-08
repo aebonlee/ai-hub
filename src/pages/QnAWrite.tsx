@@ -35,9 +35,9 @@ const QnAWrite = () => {
           navigate('/qna', { replace: true });
           return;
         }
-        setTitle(data.title || '');
-        setContent(data.content || '');
-        setCategory(data.category || '');
+        setTitle((data.title as string) || '');
+        setContent((data.content as string) || '');
+        setCategory((data.category as string) || '');
       } catch (err: any) {
         console.error('Load QnA for edit error:', err);
       } finally {

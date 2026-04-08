@@ -22,7 +22,7 @@ const QnA = () => {
     (async () => {
       setLoading(true);
       try {
-        const result = await getQnaPosts(page, PAGE_SIZE, filter);
+        const result = await getQnaPosts(page, PAGE_SIZE, filter as 'all' | 'answered' | 'unanswered');
         setPosts(result.data);
         setTotal(result.total);
       } catch (err: any) {

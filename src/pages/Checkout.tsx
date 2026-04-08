@@ -131,7 +131,7 @@ const Checkout = () => {
         }
       });
 
-      if (paymentResult.code) {
+      if ('code' in paymentResult) {
         // Payment failed or cancelled
         setError(paymentResult.message || (isEn ? 'Payment was cancelled.' : '결제가 취소되었습니다.'));
         setProcessing(false);

@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import type { PaymentStatus } from '../../types';
 import { getAllOrders, updateOrderStatus } from '../../utils/adminApi';
 
 const STATUS_OPTIONS = ['all', 'paid', 'pending', 'cancelled', 'refunded'];
@@ -17,7 +18,7 @@ const Orders = () => {
     const res = await getAllOrders({
       page,
       limit: LIMIT,
-      status: statusFilter === 'all' ? null : statusFilter,
+      status: statusFilter === 'all' ? null : statusFilter as PaymentStatus,
     });
     setOrders(res.data);
     setTotal(res.total);

@@ -1,18 +1,38 @@
 /**
- * qnaStorage.js
+ * qnaStorage.ts
  * qna_posts CRUD + answer_count 동기화 — Supabase 전용
  */
 
 import getSupabase from './supabase';
 import { toCamel } from './dbHelpers';
 
+interface QnaPostInput {
+  title: string;
+  content: string;
+  category?: string;
+  authorId: string;
+  authorName: string;
+}
+
+interface QnaPostUpdateInput {
+  title: string;
+  content: string;
+  category?: string;
+}
+
+interface QnaListResult {
+  data: Record<string, unknown>[];
+  total: number;
+}
+
 /**
  * Q&A 목록 조회 (페이지네이션 + 필터)
- * @param {number} page
- * @param {number} limit
- * @param {'all'|'answered'|'unanswered'} filter
  */
-export async function getQnaPosts(page = 1, limit = 10, filter = 'all') {
+export async function getQnaPosts(
+  page: number = 1,
+  limit: number = 10,
+  filter: 'all' | 'answered' | 'unanswered' = 'all'
+): Promise<QnaListResult> {
   const client = getSupabase();
   if (!client) return { data: [], total: 0 };
 
@@ -41,7 +61,7 @@ export async function getQnaPosts(page = 1, limit = 10, filter = 'all') {
 /**
  * 단일 Q&A 조회 + 조회수 증가
  */
-export async function getQnaPost(id) {
+export async function getQnaPost(id: number | string): Promise<Record<string, unknown> | null> {
   const client = getSupabase();
   if (!client) return null;
 
@@ -54,7 +74,7 @@ export async function getQnaPost(id) {
   if (current) {
     await client
       .from('ah_qna_posts')
-      .update({ view_count: (current.view_count || 0) + 1 })
+      .update({ view_count: ((current as Record<string, unknown>).view_count as number || 0) + 1 })
       .eq('id', Number(id));
   }
 
@@ -74,7 +94,7 @@ export async function getQnaPost(id) {
 /**
  * Q&A 작성
  */
-export async function createQnaPost({ title, content, category, authorId, authorName }) {
+export async function createQnaPost({ title, content, category, authorId, authorName }: QnaPostInput): Promise<Record<string, unknown> | null> {
   const client = getSupabase();
   if (!client) return null;
 
@@ -102,7 +122,7 @@ export async function createQnaPost({ title, content, category, authorId, author
 /**
  * Q&A 수정
  */
-export async function updateQnaPost(id, { title, content, category }) {
+export async function updateQnaPost(id: number | string, { title, content, category }: QnaPostUpdateInput): Promise<Record<string, unknown> | null> {
   const client = getSupabase();
   if (!client) return null;
 
@@ -128,7 +148,7 @@ export async function updateQnaPost(id, { title, content, category }) {
 /**
  * Q&A 삭제
  */
-export async function deleteQnaPost(id) {
+export async function deleteQnaPost(id: number | string): Promise<boolean> {
   const client = getSupabase();
   if (!client) return false;
 
@@ -147,7 +167,7 @@ export async function deleteQnaPost(id) {
 /**
  * 답변수 동기화 — 댓글 추가/삭제 시 호출
  */
-export async function syncAnswerCount(postId) {
+export async function syncAnswerCount(postId: number | string): Promise<void> {
   const client = getSupabase();
   if (!client) return;
 

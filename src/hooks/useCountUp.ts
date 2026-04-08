@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 
-const useCountUp = (end, duration = 2000, startOnView = true, delay = 0) => {
+const useCountUp = (end: number, duration: number = 2000, startOnView: boolean = true, delay: number = 0): { count: number; ref: React.RefObject<HTMLDivElement | null> } => {
   const [count, setCount] = useState(0);
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement | null>(null);
   const hasAnimated = useRef(false);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ const useCountUp = (end, duration = 2000, startOnView = true, delay = 0) => {
 
   const animate = () => {
     const startTime = performance.now();
-    const step = (currentTime) => {
+    const step = (currentTime: number) => {
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);

@@ -32,7 +32,7 @@ const ProductForm = () => {
 
   useEffect(() => {
     if (isEdit) {
-      getProduct(id).then((p) => {
+      getProduct(Number(id)).then((p) => {
         if (p) {
           setForm({
             slug: p.slug || '',
@@ -72,7 +72,7 @@ const ProductForm = () => {
         sortOrder: Number(form.sortOrder),
       };
       if (isEdit) {
-        await updateProduct(id, payload);
+        await updateProduct(Number(id), payload);
       } else {
         await createProduct(payload);
       }

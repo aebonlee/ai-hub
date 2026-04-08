@@ -1,16 +1,39 @@
 /**
- * noticeStorage.js
+ * noticeStorage.ts
  * notices CRUD — Supabase 전용 (commentStorage.js 패턴 준수)
  */
 
 import getSupabase from './supabase';
 import { toCamel } from './dbHelpers';
 
+interface NoticeInput {
+  title: string;
+  titleEn?: string;
+  content: string;
+  contentEn?: string;
+  isPinned?: boolean;
+  authorId: string;
+  authorName: string;
+}
+
+interface NoticeUpdateInput {
+  title: string;
+  titleEn?: string;
+  content: string;
+  contentEn?: string;
+  isPinned?: boolean;
+}
+
+interface NoticeListResult {
+  data: Record<string, unknown>[];
+  total: number;
+}
+
 /**
  * 공지 목록 조회 (페이지네이션)
  * page 1일 때 고정글을 먼저 가져온 후 일반글
  */
-export async function getNotices(page = 1, limit = 10) {
+export async function getNotices(page: number = 1, limit: number = 10): Promise<NoticeListResult> {
   const client = getSupabase();
   if (!client) return { data: [], total: 0 };
 
@@ -41,7 +64,7 @@ export async function getNotices(page = 1, limit = 10) {
 /**
  * 단일 공지 조회 + 조회수 증가
  */
-export async function getNotice(id) {
+export async function getNotice(id: number | string): Promise<Record<string, unknown> | null> {
   const client = getSupabase();
   if (!client) return null;
 
@@ -55,7 +78,7 @@ export async function getNotice(id) {
   if (current) {
     await client
       .from('ah_notices')
-      .update({ view_count: (current.view_count || 0) + 1 })
+      .update({ view_count: ((current as Record<string, unknown>).view_count as number || 0) + 1 })
       .eq('id', Number(id));
   }
 
@@ -75,7 +98,7 @@ export async function getNotice(id) {
 /**
  * 공지 작성
  */
-export async function createNotice({ title, titleEn, content, contentEn, isPinned, authorId, authorName }) {
+export async function createNotice({ title, titleEn, content, contentEn, isPinned, authorId, authorName }: NoticeInput): Promise<Record<string, unknown> | null> {
   const client = getSupabase();
   if (!client) return null;
 
@@ -105,7 +128,7 @@ export async function createNotice({ title, titleEn, content, contentEn, isPinne
 /**
  * 공지 수정
  */
-export async function updateNotice(id, { title, titleEn, content, contentEn, isPinned }) {
+export async function updateNotice(id: number | string, { title, titleEn, content, contentEn, isPinned }: NoticeUpdateInput): Promise<Record<string, unknown> | null> {
   const client = getSupabase();
   if (!client) return null;
 
@@ -133,7 +156,7 @@ export async function updateNotice(id, { title, titleEn, content, contentEn, isP
 /**
  * 공지 삭제
  */
-export async function deleteNotice(id) {
+export async function deleteNotice(id: number | string): Promise<boolean> {
   const client = getSupabase();
   if (!client) return false;
 
