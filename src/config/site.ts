@@ -26,6 +26,15 @@ const site: SiteConfig = {
     parts: [
       { text: 'AI', className: 'brand-biz' },
       { text: ' Hub', className: 'brand-dream' }
+    ],
+    footerLine1: [
+      { text: 'Dream', className: 'brand-dream' },
+      { text: 'IT', className: 'brand-it' },
+      { text: ' Biz', className: 'brand-biz' }
+    ],
+    footerLine2: [
+      { text: 'AI', className: 'brand-biz' },
+      { text: ' Hub', className: 'brand-dream' }
     ]
   },
 
