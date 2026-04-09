@@ -17,6 +17,7 @@ const CouponAdmin = () => {
   // 폼 상태
   const [label, setLabel] = useState('');
   const [lectureDate, setLectureDate] = useState('');
+  const [durationDays, setDurationDays] = useState(30);
   const [preview, setPreview] = useState('');
 
   const load = useCallback(async () => {
@@ -42,9 +43,10 @@ const CouponAdmin = () => {
     if (!lectureDate) return;
     setCreating(true);
     try {
-      await createCoupon({ label, lectureDate }, user.id);
+      await createCoupon({ label, lectureDate, durationDays }, user.id);
       setLabel('');
       setLectureDate('');
+      setDurationDays(30);
       setPreview('');
       load();
     } catch (err: any) {
@@ -146,6 +148,23 @@ const CouponAdmin = () => {
                 required
               />
             </div>
+            <div className="admin-form-group">
+              <label>이용 기간 *</label>
+              <select
+                value={durationDays}
+                onChange={e => setDurationDays(Number(e.target.value))}
+              >
+                <option value={1}>1일</option>
+                <option value={3}>3일</option>
+                <option value={7}>7일</option>
+                <option value={10}>10일</option>
+                <option value={14}>14일</option>
+                <option value={30}>30일</option>
+                <option value={60}>60일</option>
+                <option value={90}>90일</option>
+                <option value={365}>365일</option>
+              </select>
+            </div>
           </div>
 
           {preview && (
@@ -158,9 +177,9 @@ const CouponAdmin = () => {
                 {preview}
               </code>
               <span style={{ marginLeft: '16px', color: 'var(--text-light)', fontSize: '13px' }}>
-                (만료: {(() => {
+                (이용기간: {durationDays}일 / 만료: {(() => {
                   const d = new Date(lectureDate);
-                  d.setDate(d.getDate() + 30);
+                  d.setDate(d.getDate() + durationDays);
                   return d.toISOString().split('T')[0];
                 })()})
               </span>
@@ -197,6 +216,7 @@ const CouponAdmin = () => {
                   <th>코드</th>
                   <th>메모</th>
                   <th>강의일</th>
+                  <th>이용기간</th>
                   <th>만료일</th>
                   <th>사용</th>
                   <th>상태</th>
@@ -219,6 +239,7 @@ const CouponAdmin = () => {
                       </td>
                       <td>{c.label || '-'}</td>
                       <td>{c.lecture_date}</td>
+                      <td>{c.duration_days || 30}일</td>
                       <td>{c.expires_at}</td>
                       <td style={{ fontWeight: 600 }}>{c.use_count}명</td>
                       <td>

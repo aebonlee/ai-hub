@@ -183,7 +183,7 @@ const MyPage = () => {
                   {/* 쿠폰 기반 이용권 표시 */}
                   {hasCouponAccess && myCoupons.filter(c => {
                     const todayStr = new Date().toISOString().split('T')[0];
-                    return c.expires_at >= todayStr;
+                    return (c.access_expires_at || c.expires_at) >= todayStr;
                   }).map(c => (
                     <div key={`coupon-${c.id}`} style={{
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -198,11 +198,11 @@ const MyPage = () => {
                           쿠폰
                         </span>
                         <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-main)' }}>
-                          전체 이용권 ({c.label || '쿠폰 등록'})
+                          전체 이용권 ({c.label || '쿠폰 등록'}) — {c.duration_days || 30}일
                         </span>
                       </div>
                       <span style={{ fontSize: '12px', color: 'var(--text-light)' }}>
-                        ~{c.expires_at}
+                        ~{c.access_expires_at || c.expires_at}
                       </span>
                     </div>
                   ))}
@@ -280,9 +280,10 @@ const MyPage = () => {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {myCoupons.map(c => {
                     const today = new Date().toISOString().split('T')[0];
-                    const expired = c.expires_at < today;
+                    const accessEnd = c.access_expires_at || c.expires_at;
+                    const expired = accessEnd < today;
                     const dDay = Math.ceil(
-                      (new Date(c.expires_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+                      (new Date(accessEnd).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
                     );
                     return (
                       <div key={c.id} style={{
@@ -298,7 +299,7 @@ const MyPage = () => {
                             {c.label}
                           </span>
                           <div style={{ fontSize: '12px', color: 'var(--text-light)', marginTop: '4px' }}>
-                            이용기간: {c.lecture_date} ~ {c.expires_at}
+                            이용기간: {c.redeemed_at?.split('T')[0]} ~ {c.access_expires_at || c.expires_at} ({c.duration_days || 30}일)
                           </div>
                         </div>
                         <span style={{

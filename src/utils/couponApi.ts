@@ -18,15 +18,16 @@ export function generateCouponCode(lectureDate: string): string {
 
 /** 관리자: 쿠폰 발행 */
 export async function createCoupon(
-  input: { label: string; lectureDate: string },
+  input: { label: string; lectureDate: string; durationDays?: number },
   adminUserId: string
 ): Promise<Coupon> {
   const client = getSupabase();
   if (!client) throw new Error('Supabase not configured');
 
+  const days = input.durationDays || 30;
   const code = generateCouponCode(input.lectureDate);
   const expiresAt = new Date(input.lectureDate);
-  expiresAt.setDate(expiresAt.getDate() + 30);
+  expiresAt.setDate(expiresAt.getDate() + days);
 
   const { data, error } = await client
     .from(TABLE_COUPONS)
@@ -34,6 +35,7 @@ export async function createCoupon(
       code,
       label: input.label,
       lecture_date: input.lectureDate,
+      duration_days: days,
       expires_at: expiresAt.toISOString().split('T')[0],
       created_by: adminUserId,
     })
@@ -128,6 +130,11 @@ export async function redeemCoupon(
   if (insertErr) throw insertErr;
 
   // 5) user_licenses에 bundle 라이선스 부여 (LicenseGuard 연동)
+  const durationDays = coupon.duration_days || 30;
+  const licenseExpires = new Date();
+  licenseExpires.setDate(licenseExpires.getDate() + durationDays);
+  const licenseExpiresAt = licenseExpires.toISOString();
+
   try {
     await client.rpc('grant_coupon_license', {
       p_user_id: userId,
@@ -141,7 +148,7 @@ export async function redeemCoupon(
       await client
         .from('user_licenses')
         .upsert(
-          { user_id: userId, license_type: 'bundle', site_slug: null, order_id: null },
+          { user_id: userId, license_type: 'bundle', site_slug: null, order_id: null, expires_at: licenseExpiresAt },
           { onConflict: 'user_id,license_type,site_slug' }
         );
     } catch {
@@ -161,18 +168,24 @@ export async function hasActiveCouponAccess(userId: string): Promise<boolean> {
     .from(TABLE_USES)
     .select(`
       id,
+      redeemed_at,
       coupon:${TABLE_COUPONS}!coupon_id (
-        is_active, expires_at
+        is_active, expires_at, duration_days
       )
     `)
     .eq('user_id', userId);
 
   if (error || !data) return false;
 
-  const today = new Date().toISOString().split('T')[0];
-  return data.some((row: any) =>
-    row.coupon?.is_active && row.coupon?.expires_at >= today
-  );
+  const now = new Date();
+  return data.some((row: any) => {
+    if (!row.coupon?.is_active) return false;
+    // duration_days 기반 접근 기간 계산 (등록일 + duration_days)
+    const days = row.coupon?.duration_days || 30;
+    const accessExpires = new Date(row.redeemed_at);
+    accessExpires.setDate(accessExpires.getDate() + days);
+    return accessExpires > now;
+  });
 }
 
 /** 사용자: 내 쿠폰 목록 */
@@ -186,7 +199,7 @@ export async function getMyActiveCoupons(userId: string): Promise<MyCoupon[]> {
       id,
       redeemed_at,
       coupon:${TABLE_COUPONS}!coupon_id (
-        code, label, lecture_date, expires_at
+        code, label, lecture_date, expires_at, duration_days
       )
     `)
     .eq('user_id', userId)
@@ -197,12 +210,19 @@ export async function getMyActiveCoupons(userId: string): Promise<MyCoupon[]> {
     return [];
   }
 
-  return (data || []).map((row: any) => ({
-    id: row.id,
-    code: row.coupon?.code || '',
-    label: row.coupon?.label || '',
-    lecture_date: row.coupon?.lecture_date || '',
-    expires_at: row.coupon?.expires_at || '',
-    redeemed_at: row.redeemed_at,
-  }));
+  return (data || []).map((row: any) => {
+    const days = row.coupon?.duration_days || 30;
+    const accessExpires = new Date(row.redeemed_at);
+    accessExpires.setDate(accessExpires.getDate() + days);
+    return {
+      id: row.id,
+      code: row.coupon?.code || '',
+      label: row.coupon?.label || '',
+      lecture_date: row.coupon?.lecture_date || '',
+      expires_at: row.coupon?.expires_at || '',
+      duration_days: days,
+      redeemed_at: row.redeemed_at,
+      access_expires_at: accessExpires.toISOString().split('T')[0],
+    };
+  });
 }
