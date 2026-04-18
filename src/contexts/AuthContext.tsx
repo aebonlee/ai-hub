@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback, ReactNode 
 import getSupabase, { setSharedSession, getSharedSession, clearSharedSession } from '../utils/supabase';
 import { getProfile, updateProfile, signOut as authSignOut } from '../utils/auth';
 import { ADMIN_EMAILS } from '../config/admin';
+import { useIdleTimeout } from '../hooks/useIdleTimeout';
 
 interface AuthContextType {
   user: any;
@@ -129,6 +130,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return false;
       });
     }, 3000);
+
+
+  // 10분 무동작 세션 타임아웃
+  useIdleTimeout({
+    enabled: isLoggedIn,
+    onTimeout: () => {
+      authSignOut().catch(() => {});
+      clearSharedSession();
+    },
+  });
 
     return () => {
       clearTimeout(fallbackTimer);
